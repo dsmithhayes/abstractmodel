@@ -1,0 +1,21 @@
+{
+    "name": "dsmithhayes/phpmut",
+    "description": "A library for creating simple data models.",
+    "type": "Library",
+    "require": {
+        "php": "^7.0",
+        "psr/container": "^1.0"
+    },
+    "license": "BSD 3.0",
+    "authors": [
+        {
+            "name": "Dave Smith-Hayes",
+            "email": "me@davesmithhayes.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Phpmut\\": "src/"
+        }
+    }
+}
