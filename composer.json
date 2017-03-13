@@ -1,5 +1,5 @@
 {
-    "name": "dsmithhayes/phpmut",
+    "name": "dsmithhayes/abstractmodel",
     "description": "A library for creating simple data models.",
     "type": "Library",
     "require": {
@@ -15,7 +15,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Phpmut\\": "src/"
+            "Dsh\\AbstractModel\\": "src/"
         }
     }
 }

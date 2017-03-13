@@ -1,11 +1,12 @@
 <?php
 
-namespace Phpmut;
+namespace Dsh\AbstractModel;
 
 use ReflectionProperty;
 use ReflectionClass;
 use ReflectionException;
 use Psr\Container\ContainerInterface as Container;
+use Dsh\Exception\AbstractModelException;
 
 /**
  * The AbstractModel makes liberal use of the Reflection classes.
@@ -22,27 +23,37 @@ abstract class AbstractModel implements Container
      *
      * @var int
      */
-    const MASK_DEFAULT = (ReflectionProperty::IS_PUBLIC | ReflectionProperty::IS_PROTECTED);
+    const USE_DEFAULT = ReflectionProperty::IS_PUBLIC;
 
     /**
      * @var int
      */
-    const MASK_PUBLIC = ReflectionProperty::IS_PUBLIC;
+    const USE_PUBLIC = ReflectionProperty::IS_PUBLIC;
 
     /**
      * @var int
      */
-    const MASK_PROTECTED = ReflectionProperty::IS_PRIVATE;
+    const USE_PROTECTED = ReflectionProperty::IS_PRIVATE;
 
     /**
      * @var int
      */
-    const MASK_PRIVATE = ReflectionProperty::IS_PRIVATE;
+    const USE_PRIVATE = ReflectionProperty::IS_PRIVATE;
 
     /**
      * @var int
      */
-    const MASK_STATIC = ReflectionProperty::IS_STATIC;
+    const USE_STATIC = ReflectionProperty::IS_STATIC;
+
+    /**
+     * @var int
+     */
+    const USE_ALL = (
+        ReflectionProperty::IS_PUBLIC    |
+        ReflectionProperty::IS_PROTECTED |
+        ReflectionProperty::IS_PRIVATE   |
+        ReflectionProperty::IS_STATIC
+    );
 
     /**
      * @var array
@@ -50,6 +61,7 @@ abstract class AbstractModel implements Container
     protected $store = [];
 
     /**
+     * @param int $mask
      * @return $this
      */
     public function init(int $mask = 0)
@@ -85,14 +97,14 @@ abstract class AbstractModel implements Container
     }
 
     /**
-     * @param $key
+     * @param string $key
      * @return mixed
-     * @throws \Exception
+     * @throws AbstractModelException
      */
     public function get($key)
     {
         if (!$this->has($key)) {
-            throw new \Exception("Property '{$key}' does not exist.");
+            throw new AbstractModelException("Property '{$key}' does not exist.");
         }
 
         return $this->store[$key];
@@ -107,15 +119,16 @@ abstract class AbstractModel implements Container
         return array_key_exists($key, $this->store);
     }
 
+
     /**
      * @param $key
      * @param $value
-     * @throws \Exception
+     * @throws AbstractModelException
      */
     public function set($key, $value)
     {
         if (!$this->has($key)) {
-            throw new \Exception("Property '{$key}' does not exist.");
+            throw new AbstractModelException("Property '{$key}' does not exist.");
         }
 
         $this->store[$key] = $value;
@@ -135,20 +148,18 @@ abstract class AbstractModel implements Container
      */
     protected function buildStore(int $mask = 0)
     {
-        $className = static::class;
-
         if ($mask === 0) {
-            $mask = self::MASK_DEFAULT;
+            $mask = self::USE_DEFAULT;
         }
 
+        $className = static::class;
         $reflection = new ReflectionClass($className);
 
         foreach ($reflection->getProperties($mask) as $property) {
             $name = $property->getName();
 
-            switch ($name) {
-                case 'store':
-                    continue;
+            if ($name === 'store') {
+                continue;
             }
 
             // brute force access to protected parameters, fail safe

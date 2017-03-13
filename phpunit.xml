@@ -11,7 +11,7 @@
          verbose="true"
          beStrictAboutTestsThatDoNotTestAnything="true">
     <testsuites>
-        <testsuite name="phpmut Test Suites">
+        <testsuite name="AbstractModel Test Suites">
             <directory suffix=".php">./tests/</directory>
         </testsuite>
     </testsuites>
