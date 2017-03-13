@@ -18,15 +18,6 @@ use Dsh\AbstractModel\Exception\PropertyNotFoundException;
 abstract class AbstractModel implements Container
 {
     /**
-     * Used in the buildStore() method for the default property visibility to
-     * access within a method. By default it is only Public and Protected
-     * properties that are accessible from the AbstractModel
-     *
-     * @var int
-     */
-    const USE_DEFAULT = ReflectionProperty::IS_PUBLIC;
-
-    /**
      * @var int
      */
     const USE_PUBLIC = ReflectionProperty::IS_PUBLIC;
@@ -45,6 +36,18 @@ abstract class AbstractModel implements Container
      * @var int
      */
     const USE_STATIC = ReflectionProperty::IS_STATIC;
+
+    /**
+     * Used in the buildStore() method for the default property visibility to
+     * access within a method. By default it is only Public and Protected
+     * properties that are accessible from the AbstractModel
+     *
+     * @var int
+     */
+    const USE_DEFAULT = (
+        ReflectionProperty::IS_PUBLIC |
+        ReflectionProperty::IS_PROTECTED
+    );
 
     /**
      * @var int
