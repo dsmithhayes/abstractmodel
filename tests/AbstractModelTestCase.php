@@ -1,8 +1,9 @@
 <?php
 
 use PHPUnit_Framework_TestCase as PHPUnitTestCase;
-use Dsh\AbstractModel;
-use Dsh\Exception\AbstractModelException;
+use Dsh\AbstractModel\AbstractModel;
+use Dsh\AbstractModel\Exception\AbstractModelException;
+use Dsh\AbstractModel\Exception\PropertyNotFoundException;
 
 class AbstractModelTestCase extends PHPUnitTestCase
 {
@@ -28,11 +29,11 @@ class AbstractModelTestCase extends PHPUnitTestCase
         $this->assertEquals('Public', $model->pub);
 
         $model->init(AbstractModel::USE_ALL);
-        $this->assertEquals('Private', $model->pri);
+        $this->assertEquals('Private', $model->getPri());
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException Dsh\AbstractModel\Exception\PropertyNotFoundException
      */
     public function testFailures()
     {
@@ -47,7 +48,7 @@ class AbstractModelTestCase extends PHPUnitTestCase
 
         try {
             $this->assertEquals('Public', $model->getPub());
-        } catch (AbstractModelException $ame) {
+        } catch (PropertyNotFoundException $pnfe) {
             $model->init(AbstractModel::USE_PUBLIC | AbstractModel::USE_PRIVATE);
             $this->assertEquals('Public', $model->getPub());
         }

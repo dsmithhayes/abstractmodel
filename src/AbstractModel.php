@@ -6,7 +6,8 @@ use ReflectionProperty;
 use ReflectionClass;
 use ReflectionException;
 use Psr\Container\ContainerInterface as Container;
-use Dsh\Exception\AbstractModelException;
+use Dsh\AbstractModel\Exception\AbstractModelException;
+use Dsh\AbstractModel\Exception\PropertyNotFoundException;
 
 /**
  * The AbstractModel makes liberal use of the Reflection classes.
@@ -104,7 +105,7 @@ abstract class AbstractModel implements Container
     public function get($key)
     {
         if (!$this->has($key)) {
-            throw new AbstractModelException("Property '{$key}' does not exist.");
+            throw new PropertyNotFoundException("Property '{$key}' does not exist.");
         }
 
         return $this->store[$key];
@@ -128,7 +129,7 @@ abstract class AbstractModel implements Container
     public function set($key, $value)
     {
         if (!$this->has($key)) {
-            throw new AbstractModelException("Property '{$key}' does not exist.");
+            throw new PropertyNotFoundException("Property '{$key}' does not exist.");
         }
 
         $this->store[$key] = $value;
