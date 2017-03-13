@@ -82,18 +82,17 @@ abstract class AbstractModel implements Container
     {
         $method = substr($name, 0, 3);
 
-        if ($method === 'set') {
-            $prop = substr($name, 3, (strlen($name) - 3));
-            $prop = lcfirst($prop);
+        $stripPrefix = function (string $s, int $l) {
+            $s = substr($s, 3, (strlen($s) - 3));
+            return lcfirst($s);
+        };
 
-            return $this->set($prop, $arguments[0]);
+        if ($method === 'set') {
+            return $this->set($stripPrefix($name, 3), $arguments[0]);
         }
 
         if ($method === 'get') {
-            $prop = substr($name, 3, (strlen($name) - 3));
-            $prop = lcfirst($prop);
-
-            return $this->get($prop);
+            return $this->get($stripPrefix($name, 3));
         }
     }
 
